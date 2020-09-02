@@ -1,0 +1,25 @@
+version: '2'
+services:
+  geolocation-app:
+    image: geolocationapp
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,swagger
+      - SPRING_DATASOURCE_URL=jdbc:mysql://geolocation-mysql:3306/geolocation?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+      - SLEEP= 15
+      - KAFKA_BOOTSTRAPSERVERS=kafka:9092
+  geolocation-mysql:
+    extends:
+      file: mysql.yml
+      service: geolocation-mysql
+  kafka:
+    extends:
+      file: kafka.yml
+      service: kafka
+    environment:
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+  zookeeper:
+    extends:
+      file: kafka.yml
+      service: zookeeper
